@@ -22,24 +22,30 @@ class ViewController: UIViewController {
             if newValue.isInteger {
                 displayLabel.text = String(Int(newValue))
             } else {
-                displayLabel.text = String(newValue)
+                if newValue.isCanonical {
+                    displayLabel.text = String(format: "%.9f", newValue)
+                } else {
+                    displayLabel.text = String(newValue)
+                }
+                
+                
             }
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
     }
 
+    private var calculator = CalculatorLogic()
+    
     @IBAction func calcButtonPressed(_ sender: UIButton) {
         numberArray = []
         if let calcMethod = sender.currentTitle {
-            let calculator = CalculatorLogic(number: displayValue)
-            guard let result = calculator.calculate(symbol: calcMethod) else {
-                fatalError("The result of a calculation is nill")
+            calculator.setNumber(displayValue)
+            if let result = calculator.calculate(symbol: calcMethod) {
+                displayValue = result
             }
-            displayValue = result
         }
     }
     
